@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <algorithm>
 
 int main(int argc, char** argv){
+    // part-1 START
     std::string input_file = argv[1];
     std::ifstream file(input_file);
     std::string line;
@@ -32,6 +34,26 @@ int main(int argc, char** argv){
     }
 
     std::cout << total_distance << "\n";
+
+    // part-1 END
+
+    // part-2 START
+
+    std::unordered_map<int, int> count_map;
+
+    for(int& i : list_2){
+        count_map[i]++;
+    }
+
+    int similarity_score{0};
+
+    for(int &i : list_1){
+        similarity_score += i * count_map[i];
+    }
+
+    std::cout << similarity_score << "\n";
+    
+    // part-2 END
 
     return 0;
 }

@@ -4,26 +4,37 @@
 #include <regex>
 #include <string>
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
     std::ifstream file(argv[1]);
     std::ostringstream oss;
     oss << file.rdbuf();
     std::string data = oss.str();
 
-    std::regex pattern(R"(mul\((\d+),(\d+)\))");
+    std::regex pattern(R"(do\(\)|don't\(\)|mul\((\d+),(\d+)\))");
 
     std::sregex_iterator begin(data.begin(), data.end(), pattern);
     std::sregex_iterator end;
 
-    int result{0};
+    bool executing = true;
+    long long result = 0;
 
-    for(auto it = begin; it != end ; ++it){
-
+    for (auto it = begin; it != end; ++it) {
         std::smatch match = *it;
-        int num1 = std::stoi(match[1].str());
-        int num2 = std::stoi(match[2].str());
-        
-        result += num1 * num2;
+        std::string token = match.str();
+
+        if (token == "do()") {
+            executing = true;
+        } 
+        else if (token == "don't()") {
+            executing = false;
+        } 
+        else{
+            if(executing){
+                int x = std::stoi(match[1].str());
+                int y = std::stoi(match[2].str());
+                result += x * y;
+            }
+        }
     }
 
     std::cout << result << "\n";
